@@ -3,6 +3,7 @@ package com.quiz.together.service;
 import com.quiz.together.Model.QuestionModel;
 import com.quiz.together.Repository.QuestionRepository;
 import com.quiz.together.Repository.RoomRepository;
+import com.quiz.together.Repository.UserRepository;
 import com.quiz.together.entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,8 +17,8 @@ public class QuestionService {
     @Autowired
     private RoomRepository roomRepository;
 
-//    @Autowired
-//    private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
     private Question addQuestion(QuestionModel questionModel){

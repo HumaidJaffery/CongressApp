@@ -17,7 +17,7 @@ public class RoomService {
     @Autowired
     RoomRepository roomRepository;
 
-    private Room createRoom(RoomModel roomModel){
+    public Room createRoom(RoomModel roomModel){
         String tmp = "";
         Random random = new Random();
         for(int i=0; i<5; i++){
@@ -39,7 +39,7 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    private Room updateRoom(Integer roomKey, RoomModel roomModel){
+    public Room updateRoom(Integer roomKey, RoomModel roomModel){
         Room room = roomRepository.getReferenceById(roomKey);
         room.setBgColor(roomModel.getBgColor());
         room.setTitle(roomModel.getTitle());
@@ -51,7 +51,7 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    private void deleteRoom(Integer roomKey){
+    public void deleteRoom(Integer roomKey){
         roomRepository.deleteById(roomKey);
     }
 
