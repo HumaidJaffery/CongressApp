@@ -1,5 +1,6 @@
 package com.quiz.together.service;
 
+import com.quiz.together.Model.MessageModel;
 import com.quiz.together.Repository.ChatRepository;
 import com.quiz.together.Repository.MessageRepository;
 import com.quiz.together.Repository.UserRepository;
@@ -23,12 +24,12 @@ public class MessageService {
     @Autowired
     private UserRepository userRepository;
 
-    public Message addMessage(long chat_id, long user_id, String text, Date date){
+    public Message addMessage(MessageModel messageModel){
         Message message = new Message();
-        message.setChat(chatRepository.getReferenceById(chat_id));
-        message.setUser(userRepository.getReferenceById(user_id));
-        message.setText(text);
-        message.setDate(date);
+        message.setChat(chatRepository.getReferenceById(messageModel.getChatId()));
+        message.setUser(userRepository.getReferenceById(messageModel.getUserId()));
+        message.setText(messageModel.getText());
+        message.setDate(messageModel.getDate());
         return messageRepository.save(message);
     }
 

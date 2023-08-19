@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 public class QuestionModel {
     private QuestionType questionType;
-    private Integer room_key;
+    private Integer roomKey;
     private String question;
     private List<String> answers;
     private List<String> correctAnswer;

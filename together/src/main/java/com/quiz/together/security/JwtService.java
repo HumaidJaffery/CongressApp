@@ -30,7 +30,7 @@ public class JwtService {
     //getting specific info/claim
     public  <T> T extractClaim(String jwtToken, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(jwtToken);
-        System.out.println(claims + "===========================================================" + claimsResolver);
+//        System.out.println(claims + "===========================================================");
         return claimsResolver.apply(claims);
     }
 

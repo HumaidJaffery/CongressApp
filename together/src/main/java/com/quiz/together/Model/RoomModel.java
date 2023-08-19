@@ -25,5 +25,4 @@ public class RoomModel {
 
     private List<Topic> topics;
     private List<QuestionType> allowedQuestionTypes;
-
 }

@@ -21,11 +21,11 @@ public class QuestionService {
     private UserRepository userRepository;
 
 
-    private Question addQuestion(QuestionModel questionModel){
+    public Question addQuestion(QuestionModel questionModel){
         Question question = new Question();
         question.setQuestionType(questionModel.getQuestionType());
-        question.setRoom(roomRepository.getReferenceById(questionModel.getRoom_key()));
-//        question.setAuthor(userRepository.getReferenceById(questionModel.getUser_id()));
+        question.setRoom(roomRepository.getReferenceById(questionModel.getRoomKey()));
+        question.setAuthor(userRepository.getReferenceById(questionModel.getUser_id()));
         question.setQuestion(questionModel.getQuestion());
         question.setTopics(questionModel.getTopics());
         question.setAnswers(questionModel.getAnswers());
@@ -33,7 +33,20 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
-    private void deleteQuestion(long question_id){
+    public Question updateQuestion(QuestionModel questionModel, long questionId){
+        Question question = new Question();
+        question.setId(questionId);
+        question.setQuestionType(questionModel.getQuestionType());
+        question.setRoom(roomRepository.getReferenceById(questionModel.getRoomKey()));
+        question.setAuthor(userRepository.getReferenceById(questionModel.getUser_id()));
+        question.setQuestion(questionModel.getQuestion());
+        question.setTopics(questionModel.getTopics());
+        question.setAnswers(questionModel.getAnswers());
+        question.setCorrectAnswer(questionModel.getCorrectAnswer());
+        return questionRepository.save(question);
+    }
+
+    public void deleteQuestion(long question_id){
         questionRepository.deleteById(question_id);
     }
 }

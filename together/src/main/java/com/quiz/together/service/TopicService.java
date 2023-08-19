@@ -1,5 +1,6 @@
 package com.quiz.together.service;
 
+import com.quiz.together.Model.TopicModel;
 import com.quiz.together.Repository.RoomRepository;
 import com.quiz.together.Repository.TopicRepository;
 import com.quiz.together.entity.Topic;
@@ -15,14 +16,14 @@ public class TopicService {
     @Autowired
     private RoomRepository roomRepository;
 
-    private Topic addTopic(String name, Integer room_id){
+    public Topic addTopic(TopicModel topicModel){
         Topic topic = new Topic();
-        topic.setName(name);
-        topic.setRoom(roomRepository.getReferenceById(room_id));
+        topic.setName(topicModel.getName());
+        topic.setRoom(roomRepository.getReferenceById(topicModel.getRoomKey()));
         return topicRepository.save(topic);
     }
 
-    private void deleteTopic(long topicId){
+    public void deleteTopic(long topicId){
         topicRepository.deleteById(topicId);
     }
 
