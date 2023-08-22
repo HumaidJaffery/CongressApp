@@ -5,11 +5,18 @@ import com.quiz.together.Repository.QuestionRepository;
 import com.quiz.together.Repository.RoomRepository;
 import com.quiz.together.Repository.UserRepository;
 import com.quiz.together.entity.Question;
+import com.quiz.together.entity.Room;
+import com.quiz.together.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class QuestionService {
+
+    @Autowired
+    private UserRoomService userRoomService;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -21,11 +28,11 @@ public class QuestionService {
     private UserRepository userRepository;
 
 
-    public Question addQuestion(QuestionModel questionModel){
+    public Question addQuestion(QuestionModel questionModel) throws Exception {
         Question question = new Question();
         question.setQuestionType(questionModel.getQuestionType());
-        question.setRoom(roomRepository.getReferenceById(questionModel.getRoomKey()));
-        question.setAuthor(userRepository.getReferenceById(questionModel.getUser_id()));
+        question.setRoom(roomRepository.findById(questionModel.getRoomKey()).orElseThrow(() -> new Exception("Room doesn't exist")));
+        question.setAuthor(userRepository.findById(questionModel.getUserId()).orElseThrow(() -> new Exception("User doesn't exist")));
         question.setQuestion(questionModel.getQuestion());
         question.setTopics(questionModel.getTopics());
         question.setAnswers(questionModel.getAnswers());
@@ -38,7 +45,7 @@ public class QuestionService {
         question.setId(questionId);
         question.setQuestionType(questionModel.getQuestionType());
         question.setRoom(roomRepository.getReferenceById(questionModel.getRoomKey()));
-        question.setAuthor(userRepository.getReferenceById(questionModel.getUser_id()));
+        question.setAuthor(userRepository.getReferenceById(questionModel.getUserId()));
         question.setQuestion(questionModel.getQuestion());
         question.setTopics(questionModel.getTopics());
         question.setAnswers(questionModel.getAnswers());
@@ -48,5 +55,12 @@ public class QuestionService {
 
     public void deleteQuestion(long question_id){
         questionRepository.deleteById(question_id);
+    }
+
+    public List<Question> getQuestionsFromUserandRoom(long userId, Integer roomKey) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
+        Room room = roomRepository.findById(roomKey).orElseThrow(() -> new Exception("room not found"));
+
+        return questionRepository.findAllByAuthorAndRoom(user, room);
     }
 }

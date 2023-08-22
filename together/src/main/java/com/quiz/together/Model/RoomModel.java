@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RoomModel {
+    private long UserId;
     private String title;
     private String description;
     private boolean isPublic;
@@ -23,6 +24,6 @@ public class RoomModel {
     private Integer questionsRequiredPerUser;
     private String bgColor;
 
-    private List<Topic> topics;
+    private List<TopicModel> topics;
     private List<QuestionType> allowedQuestionTypes;
 }

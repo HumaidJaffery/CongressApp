@@ -3,15 +3,20 @@ package com.quiz.together.entity;
 import com.quiz.together.Enum.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.util.Pair;
+
+import java.util.List;
 
 @Entity
 @Table(name = "user_room")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserRoomRelation {
+
+    //will made up of roomKey + "" + userId
     @Id
-    @GeneratedValue
     private long id;
 
 
@@ -27,6 +32,10 @@ public class UserRoomRelation {
 
     private boolean hasTakenQuiz;
 
-    private Integer grade;
+    private Pair<Integer, Integer> grade;
+
+    @OneToMany
+    @JoinColumn(name = "questions")
+    private List<Question> questions;
 
 }

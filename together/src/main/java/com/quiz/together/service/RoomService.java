@@ -3,13 +3,22 @@ package com.quiz.together.service;
 import com.quiz.together.Model.RoomModel;
 import com.quiz.together.Repository.RoomRepository;
 import com.quiz.together.entity.Room;
+import com.quiz.together.entity.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
 public class RoomService {
+
+    @Autowired
+    UserRoomService userRoomService;
+
+    @Autowired
+    TopicService topicService;
 
     @Autowired
     ChatService chatService;
@@ -31,11 +40,20 @@ public class RoomService {
         room.setBgColor(roomModel.getBgColor());
         room.setTitle(roomModel.getTitle());
         room.setDescription(roomModel.getDescription());
-        room.setTopics(roomModel.getTopics());
         room.setPublic(roomModel.isPublic());
         room.setAllowedQuestionTypes(roomModel.getAllowedQuestionTypes());
         room.setQuestionsRequiredPerUser(roomModel.getQuestionsRequiredPerUser());
         room.setTotalNumOfQuestionsRequired(roomModel.getTotalNumOfQuestionsRequired());
+
+        List<Topic> topics = new ArrayList<>();
+        for(int i=0; i<roomModel.getTopics().size(); i++){
+            topics.add(topicService.addTopic(roomModel.getTopics().get(i)));
+        }
+        room.setTopics(topics);
+
+        //creating UserRoomRelation
+        userRoomService.userCreateRoom(roomKey, roomModel.getUserId());
+
         return roomRepository.save(room);
     }
 

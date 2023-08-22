@@ -8,12 +8,17 @@ import java.util.*;
 
 @Entity
 @Table(name = "room")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Room {
     @Id
     private Integer key;
+
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    private User owner;
 
     private String title;
     private String description;

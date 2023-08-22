@@ -8,7 +8,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Table(name = "mention")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Mention {
     @Id
     @GeneratedValue

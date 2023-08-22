@@ -10,7 +10,8 @@ import java.util.List;
 @Table(name = "question")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Question {
     @Id
     @GeneratedValue()
@@ -22,7 +23,6 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
-
 
     private String question;
 

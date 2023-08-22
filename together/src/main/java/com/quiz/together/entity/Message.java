@@ -9,7 +9,8 @@ import java.util.Date;
 @Table(name = "message")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Message {
     @Id
     @GeneratedValue

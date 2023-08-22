@@ -9,7 +9,8 @@ import java.util.List;
 @Table(name = "chat")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Chat {
     @Id
     @GeneratedValue()

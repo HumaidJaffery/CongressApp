@@ -6,6 +6,8 @@ import com.quiz.together.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("question/")
 @CrossOrigin
 public class QuestionController {
@@ -13,8 +15,13 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
+    @GetMapping("getQuestions/{userId}/{roomKey}")
+    public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable long userId, @PathVariable Integer roomKey) throws Exception {
+        return questionService.getQuestionsFromUserandRoom(userId, roomKey);
+    }
+
     @PostMapping("add/")
-    public Question addQuestion(@RequestBody QuestionModel questionModel){
+    public Question addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
         return questionService.addQuestion(questionModel);
     }
 
@@ -27,4 +34,6 @@ public class QuestionController {
     public void deleteQuestion(@RequestBody long questionId){
         questionService.deleteQuestion(questionId);
     }
+
+
 }

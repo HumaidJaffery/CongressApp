@@ -23,6 +23,6 @@ public class QuestionModel {
     private List<String> correctAnswer;
     private String explanation;
     private List<Topic> topics;
-    private long user_id;
+    private long userId;
 
 }
