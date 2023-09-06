@@ -7,17 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("room/")
+@RestController
 @CrossOrigin
+@RequestMapping("/room")
 public class RoomController {
 
     @Autowired
     public RoomService roomService;
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello(){
-        return ResponseEntity.ok("Hello");
-    }
 
     @PostMapping("/create_room")
     public ResponseEntity<Room> createRoom(@RequestBody RoomModel roomModel){

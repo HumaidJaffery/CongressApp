@@ -58,7 +58,6 @@ public class UserRoomService {
                         userRepository.findById(userId).orElseThrow(() -> new Exception("User doesn't exist")),
                         UserStatus.BANNED,
                         false,
-                        null,
                         new ArrayList<>()
                 ));
                 userRoomRelation.setUserStatus(UserStatus.BANNED);
@@ -83,12 +82,11 @@ public class UserRoomService {
 //                return userRoomRelationRepository.save(userRoomRelation);
 //        }
 
-        public UserRoomRelation setQuizGrade(Integer roomKey, long userId, Pair<Integer, Integer> grade) throws Exception {
-                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
-                userRoomRelation.setGrade(grade);
-                userRoomRelation.setHasTakenQuiz(true);
-                return userRoomRelationRepository.save(userRoomRelation);
-        }
+//        public UserRoomRelation setQuizGrade(Integer roomKey, long userId, Pair<Integer, Integer> grade) throws Exception {
+//                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
+//                userRoomRelation.setHasTakenQuiz(true);
+//                return userRoomRelationRepository.save(userRoomRelation);
+//        }
 
 
 }

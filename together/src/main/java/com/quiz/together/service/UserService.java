@@ -30,26 +30,42 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public String register(RegisterRequest registerRequest){
+    public ResponseEntity<String> signup(RegisterRequest registerRequest){
+        System.out.println(registerRequest);
+        if(registerRequest.getEmail() == null || registerRequest.getUsername() == null || registerRequest.getPassword() == null){
+            return ResponseEntity.badRequest().body("Username, email, and password cannot be null");
+        }
+
+        if(userRepository.existsByEmail(registerRequest.getEmail())){
+            return ResponseEntity.badRequest().body("Account with that email already exists");
+        }
+
+        if(userRepository.existsByUsername(registerRequest.getUsername())){
+            return ResponseEntity.badRequest().body("Account with that username already exists");
+        }
+
+
+
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
         userRepository.save(user);
-        return jwtService.generateToken(user);
+        return ResponseEntity.ok(jwtService.generateToken(user));
     }
 
-    public String authenticate(AuthenticationRequest authenticationRequest) throws Exception {
+    public String login(AuthenticationRequest authenticationRequest) throws Exception {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getEmail(),
                         authenticationRequest.getPassword()
                 )
         );
-        //if this point reached, then user has been authenticated
-        UserDetails user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(Exception::new);
 
+        //if this point reached, then user has been authenticated
+        UserDetails user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new Exception("Email does not exist"));
+        System.out.println("========================" + user);
         return jwtService.generateToken(user);
 
 

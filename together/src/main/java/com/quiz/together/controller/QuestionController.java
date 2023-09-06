@@ -8,29 +8,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("question/")
+@RestController
 @CrossOrigin
+@RequestMapping("/question")
 public class QuestionController {
 
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("getQuestions/{userId}/{roomKey}")
+    @GetMapping("/getQuestions/{userId}/{roomKey}")
     public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable long userId, @PathVariable Integer roomKey) throws Exception {
         return questionService.getQuestionsFromUserandRoom(userId, roomKey);
     }
 
-    @PostMapping("add/")
+    @PostMapping("/add")
     public Question addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
         return questionService.addQuestion(questionModel);
     }
 
-    @PutMapping("update/{question_id}")
+    @PutMapping("/update/{question_id}")
     public Question updateQuestion(@RequestBody QuestionModel questionModel, @PathVariable long question_id){
         return questionService.updateQuestion(questionModel, question_id);
     }
 
-    @DeleteMapping("delete/")
+    @DeleteMapping("/delete")
     public void deleteQuestion(@RequestBody long questionId){
         questionService.deleteQuestion(questionId);
     }

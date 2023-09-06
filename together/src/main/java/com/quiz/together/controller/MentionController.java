@@ -8,28 +8,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("Mention/")
+@RestController
 @CrossOrigin
+@RequestMapping("/mention")
 public class MentionController {
     @Autowired
     public MentionService mentionService;
 
-    @PostMapping("add/")
+    @PostMapping("/add")
     public Mention addMention(@RequestBody MentionModel mentionModel){
         return mentionService.addMention(mentionModel);
     }
 
-    @GetMapping("getAll/{user_id}")
+    @GetMapping("/getAll/{user_id}")
     public List<Mention> getMentions(@PathVariable long user_id){
         return mentionService.getMentions(user_id);
     }
 
-    @GetMapping("getUnread/{user_id}")
+    @GetMapping("/getUnread/{user_id}")
     public List<Mention> getUnreadMentions(@PathVariable long user_id){
         return mentionService.getUnreadMentions(user_id);
     }
 
-    @PutMapping("changeToRead/{mention_id}")
+    @PutMapping("/changeToRead/{mention_id}")
     public Mention changeToRead(@PathVariable long mention_id){
         return mentionService.changeToRead(mention_id);
     }

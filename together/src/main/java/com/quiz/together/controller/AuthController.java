@@ -7,21 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("auth/")
+@RestController
 @CrossOrigin
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.ok(userService.register(registerRequest));
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest){
+        return userService.signup(registerRequest);
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<String> register(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        return ResponseEntity.ok(userService.authenticate(authenticationRequest));
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+//        System.out.println(authenticationRequest);
+        return ResponseEntity.ok(userService.login(authenticationRequest));
     }
+
 
 }

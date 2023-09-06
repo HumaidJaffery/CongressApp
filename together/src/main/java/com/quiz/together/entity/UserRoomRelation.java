@@ -32,7 +32,6 @@ public class UserRoomRelation {
 
     private boolean hasTakenQuiz;
 
-    private Pair<Integer, Integer> grade;
 
     @OneToMany
     @JoinColumn(name = "questions")
