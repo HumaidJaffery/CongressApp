@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Room {
     @Id
-    private Integer key;
+    private String key;
 
     @ManyToOne
     @JoinColumn(name = "owner")
@@ -24,9 +24,10 @@ public class Room {
     private String description;
 
     private boolean isPublic;
-    private Integer totalNumOfQuestionsRequired;
+//    private Integer totalNumOfQuestionsRequired;
     private Integer questionsRequiredPerUser;
     private String bgColor;
+    private String textColor;
     private List<QuestionType> allowedQuestionTypes;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -36,7 +37,7 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<Question> questions;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany
     private List<Topic> topics;
 
 

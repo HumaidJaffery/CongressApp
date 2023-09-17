@@ -19,7 +19,6 @@ public class TopicService {
     public Topic addTopic(TopicModel topicModel){
         Topic topic = new Topic();
         topic.setName(topicModel.getName());
-        topic.setRoom(roomRepository.getReferenceById(topicModel.getRoomKey()));
         return topicRepository.save(topic);
     }
 

@@ -15,15 +15,14 @@ import java.util.List;
 @Getter
 @Setter
 public class RoomModel {
-    private long UserId;
     private String title;
     private String description;
     private boolean isPublic;
 
-    private Integer totalNumOfQuestionsRequired;
     private Integer questionsRequiredPerUser;
     private String bgColor;
+    private String textColor;
 
-    private List<TopicModel> topics;
+    private List<String> topics;
     private List<QuestionType> allowedQuestionTypes;
 }

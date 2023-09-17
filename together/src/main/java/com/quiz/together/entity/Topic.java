@@ -16,9 +16,6 @@ public class Topic {
     @GeneratedValue
     private long id;
 
-    @ManyToOne
-    private Room room;
-
     private String name;
 
     @ManyToMany

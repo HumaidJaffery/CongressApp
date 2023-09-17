@@ -17,7 +17,7 @@ public class QuestionController {
     QuestionService questionService;
 
     @GetMapping("/getQuestions/{userId}/{roomKey}")
-    public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable long userId, @PathVariable Integer roomKey) throws Exception {
+    public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable long userId, @PathVariable String roomKey) throws Exception {
         return questionService.getQuestionsFromUserandRoom(userId, roomKey);
     }
 

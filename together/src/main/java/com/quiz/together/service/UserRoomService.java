@@ -30,7 +30,7 @@ public class UserRoomService {
         public UserRepository userRepository;
 
 
-        public UserRoomRelation userJoinRoom(Integer roomKey, long userId){
+        public UserRoomRelation userJoinRoom(String roomKey, long userId){
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
                 userRoomRelation.setId(Integer.parseInt(roomKey + "" + userId));
                 userRoomRelation.setRoom(roomRepository.getReferenceById(roomKey));
@@ -41,7 +41,7 @@ public class UserRoomService {
         }
 
 
-        public UserRoomRelation userCreateRoom(Integer roomKey, long userId){
+        public UserRoomRelation userCreateRoom(String roomKey, long userId){
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
                 userRoomRelation.setId(Integer.parseInt(roomKey + "" + userId));
                 userRoomRelation.setRoom(roomRepository.getReferenceById(roomKey));
@@ -51,7 +51,7 @@ public class UserRoomService {
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
-        public UserRoomRelation BanUser(Integer roomKey, long userId) throws Exception {
+        public UserRoomRelation BanUser(String roomKey, long userId) throws Exception {
                 UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElse(new UserRoomRelation(
                         Long.parseLong(roomKey + "" + userId),
                         roomRepository.findById(roomKey).orElseThrow(() -> new Exception("Room doesn't exist")),
@@ -64,7 +64,7 @@ public class UserRoomService {
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
-        public UserRoomRelation UnbanUser(Integer roomKey, long userId) throws Exception {
+        public UserRoomRelation UnbanUser(String roomKey, long userId) throws Exception {
                 UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of room or user/room doesnt exist"));
                 userRoomRelation.setUserStatus(UserStatus.PARTICIPANT);
                 return userRoomRelationRepository.save(userRoomRelation);

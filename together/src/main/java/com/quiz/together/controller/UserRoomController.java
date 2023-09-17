@@ -17,17 +17,17 @@ public class UserRoomController {
     public UserRoomService userRoomService;
 
     @PostMapping("/join/{roomKey}/{userId}")
-    public UserRoomRelation joinRoom(@PathVariable Integer roomKey, @PathVariable long userId){
+    public UserRoomRelation joinRoom(@PathVariable String roomKey, @PathVariable long userId){
         return userRoomService.userJoinRoom(roomKey, userId);
     }
 
     @PostMapping("/ban/{roomKey}/{userId}")
-    public UserRoomRelation banUser(@PathVariable Integer roomKey, @PathVariable long userId) throws Exception {
+    public UserRoomRelation banUser(@PathVariable String roomKey, @PathVariable long userId) throws Exception {
         return userRoomService.BanUser(roomKey, userId);
     }
 
     @PostMapping("/unban/{roomKey}/{userId}")
-    public UserRoomRelation unbanUser(@PathVariable Integer roomKey, @PathVariable long userId) throws Exception {
+    public UserRoomRelation unbanUser(@PathVariable String roomKey, @PathVariable long userId) throws Exception {
         return userRoomService.UnbanUser(roomKey, userId);
     }
 

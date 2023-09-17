@@ -16,13 +16,6 @@ public class Chat {
     @GeneratedValue()
     private long id;
 
-    @OneToOne(mappedBy = "chat")
-    private Room room;
-
     @OneToMany(mappedBy = "chat")
     private List<Message> messages;
-
-    public Chat(Room room) {
-        this.room = room;
-    }
 }

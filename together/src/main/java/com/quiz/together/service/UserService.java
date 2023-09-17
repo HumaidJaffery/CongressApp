@@ -65,7 +65,6 @@ public class UserService {
 
         //if this point reached, then user has been authenticated
         UserDetails user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new Exception("Email does not exist"));
-        System.out.println("========================" + user);
         return jwtService.generateToken(user);
 
 

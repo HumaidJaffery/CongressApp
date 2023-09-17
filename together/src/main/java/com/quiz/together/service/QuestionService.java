@@ -57,7 +57,7 @@ public class QuestionService {
         questionRepository.deleteById(question_id);
     }
 
-    public List<Question> getQuestionsFromUserandRoom(long userId, Integer roomKey) throws Exception {
+    public List<Question> getQuestionsFromUserandRoom(long userId, String roomKey) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
         Room room = roomRepository.findById(roomKey).orElseThrow(() -> new Exception("room not found"));
 
