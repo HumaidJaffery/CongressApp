@@ -23,11 +23,12 @@ public class QuestionController {
 
     @PostMapping("/add")
     public Question addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
+        System.out.println("In question controller");
         return questionService.addQuestion(questionModel);
     }
 
     @PutMapping("/update/{question_id}")
-    public Question updateQuestion(@RequestBody QuestionModel questionModel, @PathVariable long question_id){
+    public Question updateQuestion(@RequestBody QuestionModel questionModel, @PathVariable long question_id) throws Exception {
         return questionService.updateQuestion(questionModel, question_id);
     }
 

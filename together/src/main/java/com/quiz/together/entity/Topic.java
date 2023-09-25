@@ -1,5 +1,6 @@
 package com.quiz.together.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Topic {
 
     @ManyToMany
     @JoinTable(name = "topic_questions", joinColumns = @JoinColumn(name = "topic_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
+    @JsonBackReference
     private List<Question> questions;
 
 }

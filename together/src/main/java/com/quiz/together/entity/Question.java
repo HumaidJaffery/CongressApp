@@ -1,5 +1,7 @@
 package com.quiz.together.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quiz.together.Enum.QuestionType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +24,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     private Room room;
 
     private String question;
@@ -33,10 +36,12 @@ public class Question {
     private String explanation;
 
     @ManyToMany(mappedBy = "questions")
+    @JsonManagedReference
     private List<Topic> topics;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonManagedReference
     private User author;
 
 }

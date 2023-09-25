@@ -22,7 +22,5 @@ public class QuestionModel {
     private List<String> answers;
     private List<String> correctAnswer;
     private String explanation;
-    private List<Topic> topics;
-    private long userId;
-
+    private List<Long> topicIds;
 }

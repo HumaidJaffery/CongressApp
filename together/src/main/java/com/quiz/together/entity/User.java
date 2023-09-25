@@ -1,5 +1,8 @@
 package com.quiz.together.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +29,17 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @JsonIgnore
     private List<Message> messages;
 
     @OneToMany(mappedBy = "author")
+    @JsonBackReference
     private List<Question> questions;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @JsonIgnore
     private List<Mention> mentions;
 
     @Override

@@ -4,6 +4,7 @@ import com.quiz.together.Model.RoomModel;
 import com.quiz.together.entity.Room;
 import com.quiz.together.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +19,8 @@ public class RoomController {
     public RoomService roomService;
 
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public ResponseEntity<Room> createRoom(@RequestBody RoomModel roomModel){
-        System.out.println("In Create Room controller");
         return ResponseEntity.ok(roomService.createRoom(roomModel));
     }
 
@@ -37,6 +37,11 @@ public class RoomController {
     @GetMapping("/get/{roomKey}")
     public Room getRoom(@PathVariable String roomKey){
             return roomService.getRoom(roomKey);
+    }
+
+    @GetMapping("getPublic/{page}")
+    public Page<Room> getPublicRooms(@PathVariable int page){
+        return roomService.getPublicRooms(page);
     }
 
 

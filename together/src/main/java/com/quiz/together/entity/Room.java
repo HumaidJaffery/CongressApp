@@ -1,5 +1,7 @@
 package com.quiz.together.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quiz.together.Enum.QuestionType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,10 +37,15 @@ public class Room {
     private Chat chat;
 
     @OneToMany(mappedBy = "room")
+    @JsonManagedReference
+    @JsonIgnore
     private List<Question> questions;
 
     @OneToMany
+    @JsonManagedReference
     private List<Topic> topics;
+
+    private int participantCount;
 
 
 }
