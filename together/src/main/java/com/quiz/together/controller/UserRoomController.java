@@ -1,10 +1,12 @@
 package com.quiz.together.controller;
 
-import com.quiz.together.entity.Question;
+import com.quiz.together.Enum.UserStatus;
+import com.quiz.together.entity.User;
 import com.quiz.together.entity.UserRoomRelation;
 import com.quiz.together.service.UserRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +18,22 @@ public class UserRoomController {
     @Autowired
     public UserRoomService userRoomService;
 
-    @PostMapping("/join/{roomKey}/{userId}")
-    public UserRoomRelation joinRoom(@PathVariable String roomKey, @PathVariable long userId){
-        return userRoomService.userJoinRoom(roomKey, userId);
+    @PostMapping("/join/{roomKey}")
+    public UserRoomRelation joinRoom(@PathVariable String roomKey){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRoomService.userJoinRoom(roomKey, user.getId());
     }
 
-    @PostMapping("/ban/{roomKey}/{userId}")
-    public UserRoomRelation banUser(@PathVariable String roomKey, @PathVariable long userId) throws Exception {
-        return userRoomService.BanUser(roomKey, userId);
+    @PostMapping("/ban/{roomKey}")
+    public UserRoomRelation banUser(@PathVariable String roomKey) throws Exception {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRoomService.banUser(roomKey, user.getId());
     }
 
-    @PostMapping("/unban/{roomKey}/{userId}")
-    public UserRoomRelation unbanUser(@PathVariable String roomKey, @PathVariable long userId) throws Exception {
-        return userRoomService.UnbanUser(roomKey, userId);
+    @PostMapping("/unban/{roomKey}")
+    public UserRoomRelation unbanUser(@PathVariable String roomKey) throws Exception {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRoomService.unbanUser(roomKey, user.getId());
     }
 
 //    @PostMapping("/setQuizGrade/{roomKey}/{userId}")
@@ -36,10 +41,17 @@ public class UserRoomController {
 //        return userRoomService.setQuizGrade(roomKey, userId, grade);
 //    }
 
-    @DeleteMapping("/leave_room/{roomKey}/{userId}")
-    public void leaveRoom(@PathVariable Integer roomKey, @PathVariable long userId) {
-        userRoomService.leaveRoom(roomKey, userId);
+    @DeleteMapping("/leaveRoom/{roomKey}")
+    public void leaveRoom(@PathVariable Integer roomKey) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userRoomService.leaveRoom(roomKey, user.getId());
     }
+
+//    @GetMapping("/getUserStatus/{roomKey}")
+//    public ResponseEntity<UserStatus> getUserStatus(@PathVariable String roomKey){
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return ResponseEntity.ok(userRoomService.getUserStatus(roomKey, user.getId()));
+//    }
 
 
 }

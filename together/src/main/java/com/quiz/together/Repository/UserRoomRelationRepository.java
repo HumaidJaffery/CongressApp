@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRoomRelationRepository extends JpaRepository<UserRoomRelation, Long> {
+public interface UserRoomRelationRepository extends JpaRepository<UserRoomRelation, String> {
 
 }

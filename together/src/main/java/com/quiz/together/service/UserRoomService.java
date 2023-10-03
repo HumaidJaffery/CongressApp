@@ -4,10 +4,7 @@ import com.quiz.together.Enum.UserStatus;
 import com.quiz.together.Repository.RoomRepository;
 import com.quiz.together.Repository.UserRepository;
 import com.quiz.together.Repository.UserRoomRelationRepository;
-import com.quiz.together.entity.Question;
-import com.quiz.together.entity.Room;
-import com.quiz.together.entity.User;
-import com.quiz.together.entity.UserRoomRelation;
+import com.quiz.together.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,72 +18,81 @@ import java.util.Optional;
 public class UserRoomService {
 
         @Autowired
-        public UserRoomRelationRepository userRoomRelationRepository;
+        private UserRoomRelationRepository userRoomRelationRepository;
 
         @Autowired
-        public RoomRepository roomRepository;
+        private RoomRepository roomRepository;
 
         @Autowired
-        public UserRepository userRepository;
+        private UserRepository userRepository;
 
 
         public UserRoomRelation userJoinRoom(String roomKey, long userId){
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
-                userRoomRelation.setId(Integer.parseInt(roomKey + "" + userId));
+                userRoomRelation.setId(roomKey + "" + userId);
                 userRoomRelation.setRoom(roomRepository.getReferenceById(roomKey));
                 userRoomRelation.setUser(userRepository.getReferenceById(userId));
-                userRoomRelation.setUserStatus(UserStatus.PARTICIPANT);
+                userRoomRelation.setUserStatus(UserStatus.ROOMJOINED);
                 userRoomRelation.setHasTakenQuiz(false);
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
 
-        public UserRoomRelation userCreateRoom(String roomKey, long userId){
+        public UserRoomRelation userCreateRoom(Room room, User user){
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
-                userRoomRelation.setId(Integer.parseInt(roomKey + "" + userId));
-                userRoomRelation.setRoom(roomRepository.getReferenceById(roomKey));
-                userRoomRelation.setUser(userRepository.getReferenceById(userId));
+                userRoomRelation.setId(room.getKey() + "" + user.getId());
+                userRoomRelation.setRoom(room);
+                userRoomRelation.setUser(user);
                 userRoomRelation.setUserStatus(UserStatus.OWNER);
                 userRoomRelation.setHasTakenQuiz(false);
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
-        public UserRoomRelation BanUser(String roomKey, long userId) throws Exception {
-                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElse(new UserRoomRelation(
-                        Long.parseLong(roomKey + "" + userId),
+        public UserRoomRelation banUser(String roomKey, long userId) throws Exception {
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + userId).orElse(new UserRoomRelation(
+                        roomKey + "" + userId,
                         roomRepository.findById(roomKey).orElseThrow(() -> new Exception("Room doesn't exist")),
                         userRepository.findById(userId).orElseThrow(() -> new Exception("User doesn't exist")),
                         UserStatus.BANNED,
                         false,
-                        new ArrayList<>()
+                        new ArrayList<>(),
+                        null
                 ));
                 userRoomRelation.setUserStatus(UserStatus.BANNED);
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
-        public UserRoomRelation UnbanUser(String roomKey, long userId) throws Exception {
-                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of room or user/room doesnt exist"));
-                userRoomRelation.setUserStatus(UserStatus.PARTICIPANT);
+        public UserRoomRelation unbanUser(String roomKey, long userId) throws Exception {
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + userId).orElseThrow(() -> new Exception("user is not part of room or user/room doesnt exist"));
+                userRoomRelation.setUserStatus(UserStatus.QUESTIONSCREATED);
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
         public void leaveRoom(Integer roomKey, long userId) {
-                userRoomRelationRepository.deleteById(Long.parseLong(roomKey + "" + userId));
+                userRoomRelationRepository.deleteById(roomKey + "" + userId);
         }
 
-//        public UserRoomRelation UserAddQuestion(Integer roomKey, long userId, Question question) throws Exception {
-//                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
-//                List<Question> questions = userRoomRelation.getQuestions();
-//                questions.add(question);
-//                userRoomRelation.setQuestions(questions);
-//                return userRoomRelationRepository.save(userRoomRelation);
-//        }
+        public UserRoomRelation userCreateQuestion(String roomKey, long userId, Question newQuestion) throws Exception {
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + userId).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
+                List<Question> questions = userRoomRelation.getQuestionsCreated();
+                questions.add(newQuestion);
+                userRoomRelation.setQuestionsCreated(questions);
+                //checking if user has created all required questions
+                if(userRoomRelation.getQuestionsCreated().size() >= userRoomRelation.getRoom().getQuestionsRequiredPerUser()){
+                        userRoomRelation.setUserStatus(UserStatus.QUESTIONSCREATED);
+                }
+                return userRoomRelationRepository.save(userRoomRelation);
+        }
 
-//        public UserRoomRelation setQuizGrade(Integer roomKey, long userId, Pair<Integer, Integer> grade) throws Exception {
-//                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(Long.parseLong(roomKey + "" + userId)).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
-//                userRoomRelation.setHasTakenQuiz(true);
-//                return userRoomRelationRepository.save(userRoomRelation);
-//        }
+        public UserRoomRelation getUserRoomInfo(String roomKey, long userId){
+                Optional<UserRoomRelation> userRoomRelation =  userRoomRelationRepository.findById(roomKey + "" + userId);
+                if(!userRoomRelation.isPresent()) throw new Error("User/Room doesn't exist");
+                return userRoomRelation.get();
+        }
+
+        public Grade gradeQuestions(List<Question> questions, long userId, String roomKey){
+                return null;
+        }
 
 
 }

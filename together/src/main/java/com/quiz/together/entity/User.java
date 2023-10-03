@@ -35,6 +35,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "author")
     @JsonBackReference
+    @JsonIgnore
     private List<Question> questions;
 
     @OneToMany(mappedBy = "user")

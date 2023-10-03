@@ -39,8 +39,6 @@ public class QuestionService {
 
     public Question addQuestion(QuestionModel questionModel) throws Exception {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("IN QUESTION SERVICE: " + questionModel);
-
         Question question = new Question();
         question.setQuestionType(questionModel.getQuestionType());
         question.setRoom(roomRepository.findById(questionModel.getRoomKey()).orElseThrow(() -> new Exception("Room doesn't exist")));
@@ -55,7 +53,9 @@ public class QuestionService {
         question.setTopics(topics);
         question.setAnswers(questionModel.getAnswers());
         question.setCorrectAnswer(questionModel.getCorrectAnswer());
-        return questionRepository.save(question);
+        Question response = questionRepository.save(question);
+        userRoomService.userCreateQuestion(questionModel.getRoomKey(), user.getId(), response);
+        return response;
     }
 
     public Question updateQuestion(QuestionModel questionModel, long questionId) throws Exception {

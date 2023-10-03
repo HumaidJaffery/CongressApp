@@ -71,7 +71,7 @@ public class RoomService {
         Room savedRoom = roomRepository.save(room);
 
         //creating UserRoomRelation
-        userRoomService.userCreateRoom(savedRoom.getKey(), savedRoom.getOwner().getId());
+        userRoomService.userCreateRoom(savedRoom, savedRoom.getOwner());
 
         return savedRoom;
     }

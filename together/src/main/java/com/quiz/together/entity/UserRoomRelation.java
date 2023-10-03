@@ -1,9 +1,11 @@
 package com.quiz.together.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quiz.together.Enum.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.util.Pair;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
@@ -17,24 +19,30 @@ public class UserRoomRelation {
 
     //will made up of roomKey + "" + userId
     @Id
-    private long id;
-
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "room_key")
+    @JsonIgnore
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
+    @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
     private boolean hasTakenQuiz;
 
-
     @OneToMany
-    @JoinColumn(name = "questions")
-    private List<Question> questions;
+    @JoinColumn
+    @JsonManagedReference
+    private List<Question> questionsCreated;
 
+    @OneToOne
+    @JoinColumn
+    @JsonManagedReference
+    private Grade grade;
 }

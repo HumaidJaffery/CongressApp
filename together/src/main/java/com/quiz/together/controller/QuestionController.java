@@ -23,7 +23,6 @@ public class QuestionController {
 
     @PostMapping("/add")
     public Question addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
-        System.out.println("In question controller");
         return questionService.addQuestion(questionModel);
     }
 

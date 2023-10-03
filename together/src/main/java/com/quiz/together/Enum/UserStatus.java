@@ -1,5 +1,5 @@
 package com.quiz.together.Enum;
 
 public enum UserStatus {
-    OWNER, PARTICIPANT, BANNED
+    OWNER, ROOMJOINED, QUESTIONSCREATED, QUIZTAKEN, NONE, BANNED
 }
