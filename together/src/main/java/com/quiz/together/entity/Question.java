@@ -1,10 +1,12 @@
 package com.quiz.together.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quiz.together.Enum.QuestionType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class Question {
 
     private List<String> answers;
 
-    private List<String> correctAnswer;
+    private String correctAnswer;
 
     private String explanation;
 
@@ -43,5 +45,9 @@ public class Question {
     @JoinColumn(name = "author_id")
     @JsonManagedReference
     private User author;
+
+    private Integer amountTimesAnswered = 0;
+
+    private Integer amountTimesAnsweredCorrect = 0;
 
 }

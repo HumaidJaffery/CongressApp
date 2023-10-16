@@ -3,6 +3,8 @@ package com.quiz.together.service;
 import com.quiz.together.Model.RoomModel;
 import com.quiz.together.Model.TopicModel;
 import com.quiz.together.Repository.RoomRepository;
+import com.quiz.together.Repository.UserRepository;
+import com.quiz.together.entity.Question;
 import com.quiz.together.entity.Room;
 import com.quiz.together.entity.Topic;
 import com.quiz.together.entity.User;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,11 +37,14 @@ public class RoomService {
     @Autowired
     RoomRepository roomRepository;
 
-    public Room createRoom(RoomModel roomModel){
+    @Autowired
+    private UserRepository userRepository;
+
+    public Room createRoom(RoomModel roomModel) throws Exception {
         String roomKey = "";
         Random random = new Random();
 
-        while(roomKey == "" || roomRepository.existsById(roomKey)){
+        while(roomKey.equals("") || roomRepository.existsById(roomKey)){
             roomKey = "";
             for(int i=0; i<6; i++){
                 roomKey += Integer.toString(random.nextInt(10));
@@ -65,13 +71,18 @@ public class RoomService {
         room.setTopics(topics);
 
         //Getting user from SecurityContextHolder
-        Authentication user = SecurityContextHolder.getContext().getAuthentication();
-        room.setOwner((User) user.getPrincipal());
+        String email =  ( (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user doesnt exist"));
+        room.setOwner(user);
+        System.out.println(user);
+
 
         Room savedRoom = roomRepository.save(room);
+        System.out.println(savedRoom.getOwner().getUsername());
+        System.out.println(savedRoom.getOwner().getEmail());
 
         //creating UserRoomRelation
-        userRoomService.userCreateRoom(savedRoom, savedRoom.getOwner());
+        userRoomService.userCreateRoom(savedRoom, savedRoom.getOwner().getEmail());
 
         return savedRoom;
     }
@@ -99,6 +110,10 @@ public class RoomService {
     public Page<Room> getPublicRooms(int page){
         PageRequest pr = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "participantCount"));
         return roomRepository.findByIsPublic(true, pr);
+    }
+
+    public Integer getTotalNumberOfQuestions(String roomKey){
+        return roomRepository.getReferenceById(roomKey).getQuestions().size();
     }
 
 }

@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface QuestionRepository  extends JpaRepository<Question, Long> {
     List<Question> findAllByAuthorAndRoom(User user, Room room);
+
+    List<Question> findAllByRoom(Room room);
 }

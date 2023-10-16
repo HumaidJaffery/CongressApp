@@ -11,11 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubmittedQuestion {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     private long questionId;
-    private String selectedQuestion;
+    private String selectedAnswer;
 }

@@ -26,7 +26,6 @@ public class Room {
     private String description;
 
     private boolean isPublic;
-//    private Integer totalNumOfQuestionsRequired;
     private Integer questionsRequiredPerUser;
     private String bgColor;
     private String textColor;

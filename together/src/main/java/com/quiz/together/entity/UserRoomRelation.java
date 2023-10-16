@@ -28,21 +28,21 @@ public class UserRoomRelation {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JsonManagedReference
     private User user;
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
-
-    private boolean hasTakenQuiz;
 
     @OneToMany
     @JoinColumn
     @JsonManagedReference
     private List<Question> questionsCreated;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn
     @JsonManagedReference
-    private Grade grade;
+    private List<Grade> grades;
+
+    private double averageGrade;
 }

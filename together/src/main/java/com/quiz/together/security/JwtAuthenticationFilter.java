@@ -1,5 +1,6 @@
 package com.quiz.together.security;
 
+import com.quiz.together.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
 
 
-        //if username isn't null or already authenticated
+        //if userEmail isn't null or already authenticated
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
             System.out.println("IN JWT----------------------------------------------------------------------------------- valid token");
             //get userDetails
@@ -66,9 +67,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         }
-
-        System.out.println(request + " " + response);
-
         //going to next filter
         filterChain.doFilter(request, response);
     }

@@ -12,7 +12,7 @@ import java.util.Date;
 public class MessageModel {
     private String text;
     private Date date;
-    private long userId;
+    private String userEmail;
     private long chatId;
 
 }

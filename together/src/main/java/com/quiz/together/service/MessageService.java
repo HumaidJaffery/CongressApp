@@ -27,7 +27,7 @@ public class MessageService {
     public Message addMessage(MessageModel messageModel){
         Message message = new Message();
         message.setChat(chatRepository.getReferenceById(messageModel.getChatId()));
-        message.setUser(userRepository.getReferenceById(messageModel.getUserId()));
+        message.setUser(userRepository.getReferenceById(messageModel.getUserEmail()));
         message.setText(messageModel.getText());
         message.setDate(messageModel.getDate());
         return messageRepository.save(message);

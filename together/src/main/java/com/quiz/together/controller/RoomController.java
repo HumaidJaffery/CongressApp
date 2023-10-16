@@ -20,7 +20,7 @@ public class RoomController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<Room> createRoom(@RequestBody RoomModel roomModel){
+    public ResponseEntity<Room> createRoom(@RequestBody RoomModel roomModel) throws Exception {
         return ResponseEntity.ok(roomService.createRoom(roomModel));
     }
 
@@ -42,6 +42,11 @@ public class RoomController {
     @GetMapping("getPublic/{page}")
     public Page<Room> getPublicRooms(@PathVariable int page){
         return roomService.getPublicRooms(page);
+    }
+
+    @GetMapping("getTotalNumberOfQuestions/{roomKey}")
+    public Integer getTotalNumberOfQuestions(@PathVariable String roomKey){
+        return roomService.getTotalNumberOfQuestions(roomKey);
     }
 
 

@@ -20,12 +20,16 @@ import java.util.List;
 @Builder
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue
+    @SequenceGenerator(name = "id", sequenceName = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
     private long id;
 
-    private String username;
+
+    public String displayName;
+
+    @Id
     private String email;
+    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "user")

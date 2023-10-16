@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -14,16 +15,21 @@ import java.util.List;
 public class QuestionController {
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
-    @GetMapping("/getQuestions/{userId}/{roomKey}")
-    public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable long userId, @PathVariable String roomKey) throws Exception {
-        return questionService.getQuestionsFromUserandRoom(userId, roomKey);
+    @GetMapping("/get/{roomKey}/{numOfQuestions}")
+    public Set<Question> getQuestions(@PathVariable String roomKey, @PathVariable int numOfQuestions) throws Exception {
+        return questionService.getQuestions(roomKey, numOfQuestions);
+    }
+
+    @GetMapping("/getQuestionsFromUser/{userEmail}/{roomKey}")
+    public List<Question> getUserQuestionsFromSpecificRoom(@PathVariable String userEmail, @PathVariable String roomKey) throws Exception {
+        return questionService.getQuestionsFromUserandRoom(userEmail, roomKey);
     }
 
     @PostMapping("/add")
-    public Question addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
-        return questionService.addQuestion(questionModel);
+    public void addQuestion(@RequestBody QuestionModel questionModel) throws Exception {
+        questionService.addQuestion(questionModel);
     }
 
     @PutMapping("/update/{question_id}")

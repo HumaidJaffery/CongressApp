@@ -1,14 +1,16 @@
 package com.quiz.together.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Grade {
@@ -22,5 +24,7 @@ public class Grade {
     @JsonManagedReference
     private List<GradedQuestion> gradedQuestions;
 
-    private Integer percentage;
+    private String submissionTime;
+
+    private double percentage;
 }

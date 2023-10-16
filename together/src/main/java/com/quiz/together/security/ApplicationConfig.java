@@ -28,7 +28,7 @@ public class ApplicationConfig {
 //                return null;
 //            }
 //        }
-        return username -> userRepository.findByEmail(username)
+        return email -> userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
     }
 
