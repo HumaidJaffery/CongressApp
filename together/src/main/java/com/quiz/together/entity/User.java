@@ -19,15 +19,13 @@ import java.util.List;
 @Setter
 @Builder
 public class User implements UserDetails {
-
-    @SequenceGenerator(name = "id", sequenceName = "id")
+    @Id
+    @SequenceGenerator(name="id", sequenceName = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
     private long id;
 
-
     public String displayName;
 
-    @Id
     private String email;
     @JsonIgnore
     private String password;

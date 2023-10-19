@@ -2,6 +2,7 @@ package com.quiz.together.controller;
 
 import com.quiz.together.Model.RoomModel;
 import com.quiz.together.entity.Room;
+import com.quiz.together.entity.User;
 import com.quiz.together.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -39,14 +42,31 @@ public class RoomController {
             return roomService.getRoom(roomKey);
     }
 
-    @GetMapping("getPublic/{page}")
+    @GetMapping("/getPublic/{page}")
     public Page<Room> getPublicRooms(@PathVariable int page){
         return roomService.getPublicRooms(page);
     }
 
-    @GetMapping("getTotalNumberOfQuestions/{roomKey}")
+    @GetMapping("/getTotalNumberOfQuestions/{roomKey}")
     public Integer getTotalNumberOfQuestions(@PathVariable String roomKey){
         return roomService.getTotalNumberOfQuestions(roomKey);
+    }
+
+    @GetMapping("/search/{keyword}/{page}")
+    public Page<Room> getBySearch(@PathVariable String keyword, @PathVariable int page){
+        return roomService.findBySearch(page, keyword);
+    }
+
+    @PostMapping("/like/{roomKey}")
+    public void like(@PathVariable String roomKey) throws Exception {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        roomService.likeRoom(user.getEmail(), roomKey);
+    }
+
+    @PostMapping("/unlike/{roomKey}")
+    public void unlike(@PathVariable String roomKey) throws Exception {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        roomService.unlikeRoom(user.getEmail(), roomKey);
     }
 
 

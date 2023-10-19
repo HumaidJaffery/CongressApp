@@ -46,5 +46,7 @@ public class Room {
 
     private int participantCount;
 
+    private int likes;
+
 
 }

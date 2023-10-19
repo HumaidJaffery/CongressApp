@@ -15,4 +15,5 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room, String> {
     Page<Room> findByIsPublic(boolean isPublic, Pageable pageable);
 
+    Page<Room> findByTitleContainsIgnoreCase(String title, Pageable pageable);
 }

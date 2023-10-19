@@ -43,8 +43,8 @@ public class UserService {
 
     public ResponseEntity<String> signup(RegisterRequest registerRequest){
         System.out.println(registerRequest);
-        if(registerRequest.getEmail() == null || registerRequest.getDisplayName() == null || registerRequest.getPassword() == null){
-            return ResponseEntity.badRequest().body("Username, email, and password cannot be null");
+        if(registerRequest.getEmail() == "" || registerRequest.getDisplayName() == "" || registerRequest.getPassword() == ""){
+            return ResponseEntity.badRequest().body("Username, email, or password cannot be null");
         }
 
         if(userRepository.existsByEmail(registerRequest.getEmail())){

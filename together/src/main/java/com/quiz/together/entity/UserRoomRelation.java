@@ -45,4 +45,6 @@ public class UserRoomRelation {
     private List<Grade> grades;
 
     private double averageGrade;
+
+    private boolean liked;
 }

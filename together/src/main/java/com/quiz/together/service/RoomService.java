@@ -61,7 +61,8 @@ public class RoomService {
         room.setAllowedQuestionTypes(roomModel.getAllowedQuestionTypes());
         room.setQuestionsRequiredPerUser(roomModel.getQuestionsRequiredPerUser());
         room.setTextColor(roomModel.getTextColor());
-        room.setOwner(null);
+        room.setLikes(0);
+        room.setParticipantCount(0);
 
         List<Topic> topics = new ArrayList<>();
         for(int i=0; i<roomModel.getTopics().size(); i++){
@@ -74,12 +75,8 @@ public class RoomService {
         String email =  ( (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user doesnt exist"));
         room.setOwner(user);
-        System.out.println(user);
-
 
         Room savedRoom = roomRepository.save(room);
-        System.out.println(savedRoom.getOwner().getUsername());
-        System.out.println(savedRoom.getOwner().getEmail());
 
         //creating UserRoomRelation
         userRoomService.userCreateRoom(savedRoom, savedRoom.getOwner().getEmail());
@@ -108,12 +105,32 @@ public class RoomService {
     }
 
     public Page<Room> getPublicRooms(int page){
-        PageRequest pr = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "participantCount"));
+        PageRequest pr = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
         return roomRepository.findByIsPublic(true, pr);
     }
 
     public Integer getTotalNumberOfQuestions(String roomKey){
         return roomRepository.getReferenceById(roomKey).getQuestions().size();
+    }
+
+    public Page<Room> findBySearch(int page, String keyword){
+        PageRequest pr = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
+        return roomRepository.findByTitleContainsIgnoreCase(keyword, pr);
+    }
+
+    public void likeRoom(String userEmail, String roomKey) throws Exception {
+        Room room = roomRepository.getReferenceById(roomKey);
+        if(userRoomService.likedRoom(userEmail, roomKey)){
+            room.setLikes(room.getLikes()+1);
+            roomRepository.save(room);
+        }
+    }
+
+    public void unlikeRoom(String userEmail, String roomKey) throws Exception {
+        Room room = roomRepository.getReferenceById(roomKey);
+        room.setLikes(room.getLikes()-1);
+        userRoomService.dislikeRoom(userEmail, roomKey);
+        roomRepository.save(room);
     }
 
 }

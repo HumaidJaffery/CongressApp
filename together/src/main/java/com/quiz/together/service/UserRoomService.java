@@ -38,12 +38,18 @@ public class UserRoomService {
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
                 User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
                 userRoomRelation.setId(roomKey + "" + user.getId());
-                userRoomRelation.setRoom(roomRepository.getReferenceById(roomKey));
-                userRoomRelation.setUser(userRepository.getReferenceById(userEmail));
+
+                //adding participant count
+                Room room = roomRepository.getReferenceById(roomKey);
+                room.setLikes(room.getLikes()+1);
+                userRoomRelation.setRoom(roomRepository.save(room));
+
+                userRoomRelation.setUser(userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist")));
                 userRoomRelation.setUserStatus(UserStatus.ROOMJOINED);
                 userRoomRelation.setQuestionsCreated(new ArrayList<>());
                 userRoomRelation.setGrades(new ArrayList<>());
                 userRoomRelation.setAverageGrade(0.00);
+                userRoomRelation.setLiked(false);
                 return userRoomRelationRepository.save(userRoomRelation);
         }
 
@@ -53,7 +59,6 @@ public class UserRoomService {
                 UserRoomRelation userRoomRelation = new UserRoomRelation();
                 userRoomRelation.setId(room.getKey() + "" + user.getId());
                 userRoomRelation.setRoom(room);
-                System.out.println(user.getDisplayName());
                 userRoomRelation.setUser(user);
                 userRoomRelation.setUserStatus(UserStatus.OWNER);
                 return userRoomRelationRepository.save(userRoomRelation);
@@ -61,14 +66,15 @@ public class UserRoomService {
 
         public UserRoomRelation banUser(String roomKey, String userEmail) throws Exception {
                 User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElse(new UserRoomRelation(
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElse( new UserRoomRelation(
                         roomKey + "" + user.getId(),
                         roomRepository.findById(roomKey).orElseThrow(() -> new Exception("Room doesn't exist")),
-                        userRepository.findById(userEmail).orElseThrow(() -> new Exception("User doesn't exist")),
+                        userRepository.findByEmail(userEmail).orElseThrow(() -> new Exception("User doesn't exist")),
                         UserStatus.BANNED,
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        0.00
+                        0.00,
+                        false
                 ));
                 userRoomRelation.setUserStatus(UserStatus.BANNED);
                 return userRoomRelationRepository.save(userRoomRelation);
@@ -88,7 +94,7 @@ public class UserRoomService {
 
         public UserRoomRelation userCreateQuestion(String roomKey, String userEmail, Question newQuestion) throws Exception {
                 User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElse(userJoinRoom(roomKey, userEmail));
                 List<Question> questions = userRoomRelation.getQuestionsCreated();
                 questions.add(newQuestion);
                 userRoomRelation.setQuestionsCreated(questions);
@@ -103,7 +109,7 @@ public class UserRoomService {
                 User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
                 Optional<UserRoomRelation> userRoomRelation =  userRoomRelationRepository.findById(roomKey + "" + user.getId());
                 if(!userRoomRelation.isPresent()) {
-                        return userJoinRoom(roomKey, user.getEmail());
+                        return null;
                 }
                 return userRoomRelation.get();
         }
@@ -176,6 +182,22 @@ public class UserRoomService {
                 double averageGrade = total / numOfGrades;
                 UserRoomStatisticsDTO userRoomStatisticsDTO = new UserRoomStatisticsDTO(userRoomRelations, questions, averageGrade);
                 return userRoomStatisticsDTO;
+        }
+
+        public boolean likedRoom(String userEmail, String roomKey) throws Exception {
+                User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
+                if(userRoomRelation.isLiked()) return false;
+                userRoomRelation.setLiked(true);
+                userRoomRelationRepository.save(userRoomRelation);
+                return true;
+        }
+
+        public void dislikeRoom(String userEmail, String roomKey) throws Exception {
+                User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+                UserRoomRelation userRoomRelation = userRoomRelationRepository.findById(roomKey + "" + user.getId()).orElseThrow(() -> new Exception("user is not part of this room or user/room doesn't exist"));
+                userRoomRelation.setLiked(false);
+                userRoomRelationRepository.save(userRoomRelation);
         }
 
 
