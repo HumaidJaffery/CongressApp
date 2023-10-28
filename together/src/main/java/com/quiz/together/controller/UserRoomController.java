@@ -1,5 +1,6 @@
 package com.quiz.together.controller;
 
+import com.quiz.together.DTO.GradeDTO;
 import com.quiz.together.DTO.UserRoomStatisticsDTO;
 import com.quiz.together.Model.SubmittedQuestion;
 import com.quiz.together.entity.Grade;
@@ -61,6 +62,12 @@ public class UserRoomController {
     @GetMapping("/getUserRoomStatistics/{roomKey}")
     public ResponseEntity<UserRoomStatisticsDTO> getUserRoomStatistics(@PathVariable String roomKey) throws Exception {
         return ResponseEntity.ok(userRoomService.getUserRoomStatistics(roomKey));
+    }
+
+    @GetMapping("/getGradeFromId/{id}")
+    public ResponseEntity<GradeDTO> getGradeFromId(@PathVariable long id){
+        System.out.println("IN GRADE ID CONTROLLER");
+        return ResponseEntity.ok().body(userRoomService.getGradeFromId(id));
     }
 
 

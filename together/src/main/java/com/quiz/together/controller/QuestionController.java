@@ -4,6 +4,7 @@ import com.quiz.together.Model.QuestionModel;
 import com.quiz.together.entity.Question;
 import com.quiz.together.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +38,9 @@ public class QuestionController {
         return questionService.updateQuestion(questionModel, question_id);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteQuestion(@RequestBody long questionId){
+    @DeleteMapping("/delete/{questionId}")
+    public void deleteQuestion(@PathVariable long questionId){
+        System.out.println("IN Question Controller");
         questionService.deleteQuestion(questionId);
     }
 

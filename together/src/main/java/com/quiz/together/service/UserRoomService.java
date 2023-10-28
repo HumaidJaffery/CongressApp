@@ -1,5 +1,6 @@
 package com.quiz.together.service;
 
+import com.quiz.together.DTO.GradeDTO;
 import com.quiz.together.DTO.UserRoomStatisticsDTO;
 import com.quiz.together.Enum.UserStatus;
 import com.quiz.together.Model.SubmittedQuestion;
@@ -35,8 +36,10 @@ public class UserRoomService {
 
 
         public UserRoomRelation userJoinRoom(String roomKey, String userEmail){
-                UserRoomRelation userRoomRelation = new UserRoomRelation();
                 User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+                if(userRoomRelationRepository.findById(roomKey + user.getId()).isPresent()) return userRoomRelationRepository.getReferenceById(roomKey + user.getId());
+                UserRoomRelation userRoomRelation = new UserRoomRelation();
+
                 userRoomRelation.setId(roomKey + "" + user.getId());
 
                 //adding participant count
@@ -141,7 +144,7 @@ public class UserRoomService {
                 }
 
                 grade.setGradedQuestions(gradedQuestions);
-                grade.setPercentage((double)correctQuestions/gradedQuestions.size() * 100);
+                grade.setPercentage(Math.round( ((double)correctQuestions/gradedQuestions.size() * 100.00) / 100 * 100));
 
 
                 //Getting date and time of submission
@@ -201,4 +204,9 @@ public class UserRoomService {
         }
 
 
+        public GradeDTO getGradeFromId(long id) {
+                Grade grade =  gradeRepository.getReferenceById(id);
+                GradeDTO gradeDTO = new GradeDTO(grade.getGradedQuestions(), grade.getSubmissionTime(), grade.getPercentage());
+                return gradeDTO;
+        }
 }

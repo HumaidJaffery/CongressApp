@@ -105,7 +105,7 @@ public class RoomService {
     }
 
     public Page<Room> getPublicRooms(int page){
-        PageRequest pr = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
+        PageRequest pr = PageRequest.of(page, 12, Sort.by(Sort.Direction.DESC, "likes"));
         return roomRepository.findByIsPublic(true, pr);
     }
 
@@ -114,7 +114,7 @@ public class RoomService {
     }
 
     public Page<Room> findBySearch(int page, String keyword){
-        PageRequest pr = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
+        PageRequest pr = PageRequest.of(page, 12, Sort.by(Sort.Direction.DESC, "likes"));
         return roomRepository.findByTitleContainsIgnoreCase(keyword, pr);
     }
 

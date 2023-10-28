@@ -52,7 +52,6 @@ public class QuestionService {
         question.setAmountTimesAnsweredCorrect(0);
         question.setAmountTimesAnswered(0);
 
-
         //adding list of topics to question
         List<Topic> topics = new ArrayList<>();
         for(int i =0; i< questionModel.getTopicIds().size(); i++){
@@ -95,6 +94,7 @@ public class QuestionService {
     }
 
     public void deleteQuestion(long question_id){
+        System.out.println("in delete question service");
         questionRepository.deleteById(question_id);
     }
 
@@ -106,10 +106,29 @@ public class QuestionService {
 
     public Set<Question> getQuestions(String roomKey, int numOfQuestions) throws Exception {
         Optional<Room> room = roomRepository.findById(roomKey);
-        if(!room.isPresent()) throw new Exception("Room doesnt exist");
+        if(!room.isPresent()) throw new Exception("Room doesn't exist");
 
+        Set<Question> questions = new HashSet<>();
         //getting list of topics
         List<Topic> topics =  room.get().getTopics();
+
+        //if there are no topics get random questions
+        List<Question> allQuestions = room.get().getQuestions();
+        if(topics.size()  < 2){
+            Random random = new Random();
+            while(questions.size() < numOfQuestions){
+                System.out.println(allQuestions.size() + "------");
+                if(allQuestions.size() == 1) {
+                    questions.add(allQuestions.get(0));
+                    break;
+                }
+                int index = random.nextInt(0, allQuestions.size()-1);
+                System.out.println(index);
+                questions.add(allQuestions.get(index));
+                allQuestions.remove(index);
+            }
+            return questions;
+        }
 
         //creating hashmap of topicId's to list of Questions
         HashMap<Long, List<Question>> questionsInTopics = new HashMap<>();
@@ -118,13 +137,11 @@ public class QuestionService {
         }
 
         //going through each topic, one-by-one, and adding one question to set
-        Set<Question> questions = new HashSet<>();
         int i = 0;
         while(questions.size() < numOfQuestions){
             //All the questions in one current topic
             List<Question> currQuestions = questionsInTopics.get( topics.get(i).getId());
-
-            if(currQuestions != null &&  currQuestions.size() > 0){
+            if(currQuestions != null && currQuestions.size() > 0){
                 System.out.println("==" + currQuestions.get(currQuestions.size()-1).getQuestion());
                 //add last question in Topic to questions
                 questions.add(currQuestions.get(currQuestions.size()-1));

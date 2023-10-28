@@ -94,7 +94,7 @@ public class UserService {
 
         for(int i=0; i<userRoomRelationList.size(); i++){
             Room room = userRoomRelationList.get(i).getRoom();
-            RoomDisplayDTO roomDisplayDTO = new RoomDisplayDTO(room.getTitle(), room.getDescription(), room.getBgColor(), room.getTextColor());
+            RoomDisplayDTO roomDisplayDTO = new RoomDisplayDTO(room.getKey(), room.getTitle(), room.getDescription(), room.getBgColor(), room.getTextColor());
 
             if(userRoomRelationList.get(i).getUserStatus() == UserStatus.OWNER){
                 roomsCreated.add(roomDisplayDTO);

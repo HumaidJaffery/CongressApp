@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class RoomDisplayDTO {
+    private String key;
     private String title;
     private String description;
     private String bgColor;
