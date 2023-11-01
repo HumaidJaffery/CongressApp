@@ -77,7 +77,8 @@
 
 	<build>
 		<plugins>
-			<plugin>
+<!--			commented out for creating jar file???-->
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -88,7 +89,7 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 
